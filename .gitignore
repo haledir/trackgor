@@ -1,0 +1,13 @@
+/tmp
+
+.env
+
+*.exe
+*.db
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
