@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
+	"os"
 
 	"github.com/haledir/trackgor/db"
+	"github.com/haledir/trackgor/views"
 )
 
 func main() {
@@ -12,5 +15,8 @@ func main() {
 		log.Fatalf("Error initializing database: %v", err)
 	}
 	defer database.Close()
+
+	component := views.Hello("Michael")
+	component.Render(context.Background(), os.Stdout)
 
 }
