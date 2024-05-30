@@ -1,10 +1,10 @@
 package main
 
 import (
-	"context"
 	"log"
-	"os"
+	"net/http"
 
+	"github.com/a-h/templ"
 	"github.com/haledir/trackgor/db"
 	"github.com/haledir/trackgor/views"
 )
@@ -16,7 +16,14 @@ func main() {
 	}
 	defer database.Close()
 
-	component := views.Hello("Michael")
-	component.Render(context.Background(), os.Stdout)
+	users, err := db.GetUsers(database)
+	if err != nil {
+		log.Fatalf("Error initializing database: %v", err)
+	}
+
+	indexComponent := views.Index(users)
+
+	http.Handle("/", templ.Handler(indexComponent))
+	http.ListenAndServe(":42069", nil)
 
 }

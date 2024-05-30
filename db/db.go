@@ -10,6 +10,17 @@ import (
 	"os"
 )
 
+type User struct {
+	ID       int
+	Email    string
+	Username string
+	Password string
+}
+
+type Users struct {
+	Users []User
+}
+
 func InitDB(dbName string) (*sql.DB, error) {
 	err := godotenv.Load()
 	if err != nil {
@@ -40,7 +51,7 @@ func InitDB(dbName string) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	insertInitialCredentials(db)
+	// insertInitialCredentials(db)
 	return db, nil
 }
 
@@ -68,4 +79,23 @@ func insertInitialCredentials(db *sql.DB) {
 	} else if err != nil {
 		log.Fatalf("Error checking initial user: %v", err)
 	}
+}
+
+func GetUsers(db *sql.DB) ([]User, error) {
+	rows, err := db.Query("select ID, EMAIL, USERNAME, PASSWORD from USERS")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []User
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.ID, &user.Email, &user.Username, &user.Password); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }

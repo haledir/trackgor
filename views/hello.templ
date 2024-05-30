@@ -1,5 +1,23 @@
 package views
 
+import "fmt"
+import "github.com/haledir/trackgor/db"
+
 templ Hello(name string) {
 	<div>Hello, { name }</div>
+}
+
+templ Index(users []db.User) {
+	<html>
+		<head>
+			<title>Test</title>
+		</head>
+		<body>
+			<ul>
+				for _, user := range users {
+					<li>{ fmt.Sprintf("%v", user.ID) }: { user.Username } - { user.Email }</li>
+				}
+			</ul>
+		</body>
+	</html>
 }
